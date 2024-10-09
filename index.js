@@ -83,7 +83,7 @@ app.put("/users/:id", async (req, res) => {
     if (!updatedUser) {
       res
         .status(404)
-        .json({ message: "User updating error", error: err.message });
+        .json({ message: "User not found ", error: err.message });
     }
     res.status(200).json(updatedUser);
   } catch (err) {
@@ -93,6 +93,16 @@ app.put("/users/:id", async (req, res) => {
       .json({ message: "User updating error", error: err.message });
   }
 });
+//delete user
+app.delete('/users/:id', async(req, res) =>{
+    try {
+        const deleteUser = await User.findByIdAndDelete(req.params.id)
+       if(!deleteUser){
+        res.status(404).json({message: "user not found"})
+       }
+       res.status(200).json({message: `user with ID ${req.params.id} deleted successfully`})
+    } 
+})
 
 app.listen(PORT, () => {
   console.log(`Server is listining in http://localhost:${PORT}`);
