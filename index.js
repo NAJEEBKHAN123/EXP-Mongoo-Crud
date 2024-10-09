@@ -1,36 +1,51 @@
 const mongoose = require('mongoose')
 const express = require('express')
+const cors = require('cors')
+
 
 const PORT = 3000;
 const app = express();
+app.use(cors());
+app.use(express.json());
 
 
-main().then(() =>{
-    console.log("connectin is working")
-}).catch((err) =>{console.log(err)})
-async function main() {
-    await mongoose.connect('mongodb:127.0.0.1:27017/user-managment');
-}
+const mongoUrl ='mongodb://127.0.0.1:27017/user-managment';
+
+mongoose.connect(mongoUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(()=>{
+    console.log('Mongodb successsfully connected')
+}).catch((err) =>{
+    console.log("error in mongodb connecting ", err.message)
+})
+
 const userSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    age: Number,
+    name: {
+        type: String,
+        required: true
+    },
+    email:{
+        type:String,
+        required: true
+    },
+   age:{
+    type: Number
+   }
 })
 
 const User = mongoose.model("User", userSchema);
-const user1 = new User({
-    name: "najeeb",
-    email: 'najeebkhan@gamil.com',
-    age: 23,
+
+//fetching all users
+app.get('/', async(req, res) =>{
+    try{
+        const users = await User.find()
+        res.status(200).json(users)
+    }
 })
-user1.save().then((data) =>{
-    console.log(data)
-}).catch((err) =>{
-    console.log(err)
-})
-app.get('/', (req, res) =>{
-    res.send("fetching all users")
-})
+
+//CREATE USERS
+
 
 app.listen(PORT, () =>{
     console.log(`Server is listining in http://localhost:${PORT}`)
