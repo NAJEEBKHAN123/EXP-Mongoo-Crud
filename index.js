@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 //fetching all users
-app.get('/', async(req, res) =>{
+app.get('/users', async(req, res) =>{
     try{
         const users = await User.find()
         res.status(200).json(users)
@@ -48,7 +48,7 @@ app.get('/', async(req, res) =>{
 })
 
 //CREATE USERS
-app.post('/', async(req, res) =>{
+app.post('/users', async(req, res) =>{
     const allUser = new User({
         name: req.body.name,
         email: req.body.email,
