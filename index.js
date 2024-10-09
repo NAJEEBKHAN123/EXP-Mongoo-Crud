@@ -58,7 +58,11 @@ app.post('/', async(req, res) =>{
         const newUser = await allUser.save();
         res.status(200).json(newUser)
 
+    } catch (err) {
+        console.log("user fetching error", err)
+        res.status(500).json({ message: "Error fetching users", error: err.message });
     }
+
 })
 
 app.listen(PORT, () =>{
