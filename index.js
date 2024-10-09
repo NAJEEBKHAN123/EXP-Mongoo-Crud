@@ -59,17 +59,25 @@ app.post('/users', async(req, res) =>{
         res.status(200).json(allUser)
 
     } catch (err) {
-        console.log("user fetching error", err)
-        res.status(500).json({ message: "Error fetching users", error: err.message });
+        console.log("user creating error", err)
+        res.status(500).json({ message: "Error creating users", error: err.message });
     }
 })
 
 //Updation 
 app.put('/users/:id', async(req, res) =>{
    
-    const userId = await User.findByIdAndUpdate(req.params.id)
-    console.log(userId)
-    res.status(200).json(userId)
+    try {   
+
+        const userId = await User.findByIdAndUpdate(req.params.id)
+        userId.name = req.body.name
+       const updateUser = await userId.save()
+    //     console.log(updateUserById)
+        res.status(200).json(updateUser)
+    } catch (err) {
+        console.log('user updating error')
+        res.status(500).json({message: "User updating error", error: err.message})
+    }
 })
 
 app.listen(PORT, () =>{
