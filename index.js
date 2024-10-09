@@ -48,7 +48,18 @@ app.get('/', async(req, res) =>{
 })
 
 //CREATE USERS
+app.post('/', async(req, res) =>{
+    const allUser = new User({
+        name: req.body.name,
+        email: req.body.email,
+        age: req.body.age,
+    })
+    try {
+        const newUser = await allUser.save();
+        res.status(200).json(newUser)
 
+    }
+})
 
 app.listen(PORT, () =>{
     console.log(`Server is listining in http://localhost:${PORT}`)
