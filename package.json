@@ -3,15 +3,20 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Najeeb Ullah",
   "license": "ISC",
-  "description": "",
+  "description": "A user management API using Express and MongoDB.",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "mongoose": "^8.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20" 
   }
 }
