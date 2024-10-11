@@ -39,6 +39,11 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
+
+app.get("/", (req, res) => {
+  res.send("Welcome to the User Management API! Use /users to interact with users.");
+});
+
 // Fetching all users
 app.get("/users", async (req, res) => {
   try {
