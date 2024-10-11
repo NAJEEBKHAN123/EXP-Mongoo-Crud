@@ -2,12 +2,13 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 
-const PORT = 3000;
+
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const mongoUrl = "mongodb://127.0.0.1:27017/user-managment";
+const mongoUrl = process.env.MONGO_URL;   // Set this in Vercel environment variables
+// const mongoUrl = "mongodb://127.0.0.1:27017/user-managment";
 
 mongoose
   .connect(mongoUrl, {
@@ -103,6 +104,8 @@ app.put("/users/:id", async (req, res) => {
   }
  })
 
+
+ const PORT = process.env.PORT || 3000; // Use the port assigned by Vercel
 app.listen(PORT, () => {
   console.log(`Server is listining in http://localhost:${PORT}`);
 });
