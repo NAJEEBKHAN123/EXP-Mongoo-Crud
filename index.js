@@ -7,8 +7,8 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection string
-const mongoUrl = process.env.MONGO_URL || "mongodb+srv://najeebkhan:najeebkhan12@user-management-cluster.zkw9a.mongodb.net/user-management?retryWrites=true&w=majority&appName=user-management-cluster";
-
+// const mongoUrl = process.env.MONGO_URL || "mongodb+srv://najeebkhan:najeebkhan12@user-management-cluster.zkw9a.mongodb.net/user-management?retryWrites=true&w=majority&appName=user-management-cluster";
+const mongoUrl = 'mongodb://127.0.0.1:27017/user-managment'
 // Connect to MongoDB
 mongoose
   .connect(mongoUrl, {
@@ -110,5 +110,5 @@ app.delete("/users/:id", async (req, res) => {
 // Start the server
 const PORT = process.env.PORT || 3000; // Use the port assigned by Vercel
 app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}.`);
+  console.log(`Server is listening on port http://localhost${PORT}.`);
 });
