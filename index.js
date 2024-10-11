@@ -37,16 +37,15 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-//fetching all users
+//FETCHING ALL USERS
+
 app.get("/users", async (req, res) => {
   try {
     const users = await User.find();
     res.status(200).json(users);
   } catch (err) {
-    console.log("user fetching error", err);
-    res
-      .status(500)
-      .json({ message: "Error fetching users", error: err.message });
+    console.log(err);
+    res.status(500).json({ message: "error in fetching users" });
   }
 });
 
@@ -59,19 +58,18 @@ app.post("/users", async (req, res) => {
   });
   try {
     const allUser = await newUser.save();
-    res.status(200).json(allUser);
+    res.status(200).json({ message: "ceating new user", data: allUser });
   } catch (err) {
-    console.log("user creating error", err);
-    res
-      .status(500)
-      .json({ message: "Error creating users", error: err.message });
+    console.log("error in creating new user");
+    res.status(500).json("error in creating new user", err.message);
   }
 });
 
-//Update users
+//UPDATE USER BY ID
+
 app.put("/users/:id", async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(
+    const updateUser = await User.findByIdAndUpdate(
       req.params.id,
       {
         name: req.body.name,
@@ -80,29 +78,30 @@ app.put("/users/:id", async (req, res) => {
       },
       { new: true }
     );
-    if (!updatedUser) {
-      res
-        .status(404)
-        .json({ message: "User not found ", error: err.message });
+    if(!updateUser){
+      res.status(404).json({message: "404 not found!"})
     }
-    res.status(200).json(updatedUser);
+    res.status(200).json({message: "update user successful", data: updateUser})
   } catch (err) {
-    console.log("user updating error");
-    res
-      .status(500)
-      .json({ message: "User updating error", error: err.message });
+    console.log('error in updating user')
+    res.status(500).json({message: "error in updating user",})
   }
 });
-//delete user
-app.delete('/users/:id', async(req, res) =>{
-    try {
-        const deleteUser = await User.findByIdAndDelete(req.params.id)
-       if(!deleteUser){
-        res.status(404).json({message: "user not found"})
-       }
-       res.status(200).json({message: `user with ID ${req.params.id} deleted successfully`})
-    } 
-})
+
+//DELETE USERS
+
+ app.delete('/users/:id', async(req, res) =>{
+  try {
+    const deleteUser = await User.findByIdAndDelete(req.params.id)
+    if(!deleteUser){
+      res.status(404).json({message: "404 not found!"})
+    }
+    res.status(200).json({message: `delete user with ID ${req.params.id} `,})
+  } catch (err) {
+    console.log("error in deleting user")
+    res.status(500).json({message: "error in deleting user"})
+  }
+ })
 
 app.listen(PORT, () => {
   console.log(`Server is listining in http://localhost:${PORT}`);
