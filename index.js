@@ -2,13 +2,11 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 
-
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// const mongoUrl = process.env.MONGO_URL;   // Set this in Vercel environment variables
-const mongoUrl = "mongodb://127.0.0.1:27017/user-managment";
+const mongoUrl = process.env.MONGO_URL;  // MongoDB URL from environment variables
 
 mongoose
   .connect(mongoUrl, {
@@ -16,10 +14,10 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("Mongodb successsfully connected");
+    console.log("MongoDB successfully connected");
   })
   .catch((err) => {
-    console.log("error in mongodb connecting ", err.message);
+    console.log("Error in MongoDB connecting:", err.message);
   });
 
 const userSchema = new mongoose.Schema({
@@ -38,19 +36,18 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-//FETCHING ALL USERS
-
+// FETCHING ALL USERS
 app.get("/users", async (req, res) => {
   try {
     const users = await User.find();
     res.status(200).json(users);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "error in fetching users" });
+    res.status(500).json({ message: "Error in fetching users" });
   }
 });
 
-//CREATE USERS
+// CREATE USER
 app.post("/users", async (req, res) => {
   const newUser = new User({
     name: req.body.name,
@@ -58,19 +55,18 @@ app.post("/users", async (req, res) => {
     age: req.body.age,
   });
   try {
-    const allUser = await newUser.save();
-    res.status(200).json({ message: "ceating new user", data: allUser });
+    const savedUser = await newUser.save();
+    res.status(200).json({ message: "User created", data: savedUser });
   } catch (err) {
-    console.log("error in creating new user");
-    res.status(500).json("error in creating new user", err.message);
+    console.log("Error in creating user:", err.message);
+    res.status(500).json({ message: "Error in creating user" });
   }
 });
 
-//UPDATE USER BY ID
-
+// UPDATE USER BY ID
 app.put("/users/:id", async (req, res) => {
   try {
-    const updateUser = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
         name: req.body.name,
@@ -79,33 +75,31 @@ app.put("/users/:id", async (req, res) => {
       },
       { new: true }
     );
-    if(!updateUser){
-      res.status(404).json({message: "404 not found!"})
+    if (!updatedUser) {
+      res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json({message: "update user successful", data: updateUser})
+    res.status(200).json({ message: "User updated", data: updatedUser });
   } catch (err) {
-    console.log('error in updating user')
-    res.status(500).json({message: "error in updating user",})
+    console.log("Error in updating user:", err.message);
+    res.status(500).json({ message: "Error in updating user" });
   }
 });
 
-//DELETE USERS
-
- app.delete('/users/:id', async(req, res) =>{
+// DELETE USER BY ID
+app.delete("/users/:id", async (req, res) => {
   try {
-    const deleteUser = await User.findByIdAndDelete(req.params.id)
-    if(!deleteUser){
-      res.status(404).json({message: "404 not found!"})
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) {
+      res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json({message: `delete user with ID ${req.params.id} `,})
+    res.status(200).json({ message: `User with ID ${req.params.id} deleted` });
   } catch (err) {
-    console.log("error in deleting user")
-    res.status(500).json({message: "error in deleting user"})
+    console.log("Error in deleting user:", err.message);
+    res.status(500).json({ message: "Error in deleting user" });
   }
- })
+});
 
-
- const PORT = process.env.PORT || 3000; // Use the port assigned by Vercel
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is listining in http://localhost:${PORT}`);
+  console.log(`Server is listening on port http:localhost:${PORT}`);
 });
